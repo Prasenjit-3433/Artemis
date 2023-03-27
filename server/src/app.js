@@ -18,8 +18,8 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // Routes or End-Points
-app.use(planetsRouter);
-app.use(launchesRouter);
+app.use('/planets', planetsRouter);
+app.use('/launches', launchesRouter);
 
 // Serving the Production-build with Client-Side Routing
 app.get('*', (req, res) => {
