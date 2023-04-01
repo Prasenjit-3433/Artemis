@@ -1,4 +1,8 @@
+const cluster = require('cluster');
+
 const http = require('http');
+
+cluster.schedulingPolicy = cluster.SCHED_RR;
 
 const app = require('./app');
 const { loadPlanetsData } = require('./models/planets.model');
