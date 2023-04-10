@@ -4,6 +4,7 @@ const http = require('http');
 const app = require('./app');
 const { mongoConnect } = require('./services/mongo');
 const { loadPlanetsData } = require('./models/planets.model');
+const { loadLaunchesData } = require('./models/launches.model');
 
 cluster.schedulingPolicy = cluster.SCHED_RR;
 
@@ -15,6 +16,7 @@ async function startServer() {
     await mongoConnect();
 
     await loadPlanetsData();
+    await loadLaunchesData();
 
     server.listen(PORT, () => {
         console.log(`Listening on port ${PORT}...`);
