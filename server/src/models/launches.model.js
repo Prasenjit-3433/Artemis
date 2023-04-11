@@ -1,7 +1,7 @@
 const axios = require('axios');
 
-const launches = require('./launches.mongo');
-const planets = require('./planets.mongo');
+const launchesCollection = require('./launches.mongo');
+const planetsCollection = require('./planets.mongo');
 
 const DEFAULT_FLIGHT_NUMBER = 100;
 
@@ -22,7 +22,7 @@ saveLaunch(launch);
 
 
 async function findLaunch(filter) {
-    return await launches.findOne(filter);
+    return await launchesCollection.findOne(filter);
 }
 
 async function doesLaunchExistWithId(launchId) {
@@ -31,13 +31,13 @@ async function doesLaunchExistWithId(launchId) {
 }
 
 async function getLatestFlightNumber() {
-    const latestLaunch = await launches.findOne().sort('-flightNumber');
+    const latestLaunch = await launchesCollection.findOne().sort('-flightNumber');
 
     return latestLaunch ? latestLaunch.flightNumber : DEFAULT_FLIGHT_NUMBER; 
 }
 
 async function saveLaunch(launch) {
-    await launches.findOneAndUpdate({
+    await launchesCollection.findOneAndUpdate({
         flightNumber: launch.flightNumber
     }, launch, {
         upsert: true
@@ -109,11 +109,11 @@ async function loadLaunchesData() {
 }
 
 async function getAllLaunches() {
-    return await launches.find({}, { _id: 0, __v: 0 });
+    return await launchesCollection.find({}, { _id: 0, __v: 0 });
 }
 
 async function scheduleNewLaunch(launch) {
-    const planet = await planets.findOne({ keplerName: launch.target });
+    const planet = await planetsCollection.findOne({ keplerName: launch.target });
 
     if (!planet) {
       throw new Error('No matching planet found!');
@@ -132,7 +132,7 @@ async function scheduleNewLaunch(launch) {
 }
 
 async function abortLaunchWithId(launchId) {
-    const aborted = await launches.updateOne({ flightNumber: launchId }, { 
+    const aborted = await launchesCollection.updateOne({ flightNumber: launchId }, { 
         upcoming : false, 
         success : false 
     });
@@ -141,8 +141,8 @@ async function abortLaunchWithId(launchId) {
 }
 
 module.exports = {
-    loadLaunchesData,
     doesLaunchExistWithId,
+    loadLaunchesData,
     getAllLaunches,
     scheduleNewLaunch,
     abortLaunchWithId
