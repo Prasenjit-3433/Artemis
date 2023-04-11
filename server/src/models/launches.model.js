@@ -108,8 +108,11 @@ async function loadLaunchesData() {
 
 }
 
-async function getAllLaunches() {
-    return await launchesCollection.find({}, { _id: 0, __v: 0 });
+async function getAllLaunches(skip, limit) {
+    return await launchesCollection
+    .find({}, { _id: 0, __v: 0 })
+    .skip(skip)
+    .limit(limit);
 }
 
 async function scheduleNewLaunch(launch) {
